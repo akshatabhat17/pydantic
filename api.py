@@ -121,6 +121,8 @@ def update_employee(employee_id: int, employee: EmployeeModel):
     """Update an employee by ID."""
     if employee_id not in employees:
         raise HTTPException(status_code=404, detail="Employee not found")
+    if employee.id != employee_id:
+        raise HTTPException(status_code=400, detail="Employee ID in body must match path parameter")
     employees[employee_id] = employee
     return employee
 
@@ -207,6 +209,8 @@ def update_customer(customer_id: int, customer: CustomerModel):
     """Update a customer by ID."""
     if customer_id not in customers:
         raise HTTPException(status_code=404, detail="Customer not found")
+    if customer.id != customer_id:
+        raise HTTPException(status_code=400, detail="Customer ID in body must match path parameter")
     customers[customer_id] = customer
     return customer
 
