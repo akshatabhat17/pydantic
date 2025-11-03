@@ -6,6 +6,9 @@ from pydantic import BaseModel
 
 app = FastAPI(title="User Management API")
 
+# Cache for user data - loaded once at startup
+_users_cache = None
+
 
 class User(BaseModel):
     id: int
@@ -18,10 +21,28 @@ class HelloResponse(BaseModel):
 
 
 def load_users():
-    """Load users from the JSON file."""
+    """Load users from the JSON file with error handling and caching."""
+    global _users_cache
+    
+    if _users_cache is not None:
+        return _users_cache
+    
     json_path = os.path.join(os.path.dirname(__file__), "users.json")
-    with open(json_path, "r") as f:
-        return json.load(f)
+    
+    try:
+        with open(json_path, "r") as f:
+            _users_cache = json.load(f)
+            return _users_cache
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=500, 
+            detail="User data file not found. Please contact the administrator."
+        )
+    except json.JSONDecodeError:
+        raise HTTPException(
+            status_code=500, 
+            detail="User data file is corrupted. Please contact the administrator."
+        )
 
 
 @app.get("/hello", response_model=HelloResponse)
