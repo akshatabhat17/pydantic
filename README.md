@@ -2,6 +2,12 @@
 
 A FastAPI application that exposes CRUD operations for all Pydantic models from the `pydantic.ipynb` notebook.
 
+**Note:** This is a demonstration application using in-memory storage. For production use, consider implementing:
+- Persistent database storage (PostgreSQL, MongoDB, etc.)
+- Thread-safe data structures or proper locking mechanisms
+- Authentication and authorization
+- Rate limiting and input sanitization
+
 ## Features
 
 This API provides full CRUD (Create, Read, Update, Delete) operations for the following models:
